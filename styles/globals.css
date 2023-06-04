@@ -2,11 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
-.light-theme {
-  --background: rgb(233, 31, 31);
-  --text: white;
-}
-.dark-theme {
-  --background: black;
-  --text: white;
+@layer components {
+  .lightTheme {
+    --background: white;
+    --text: black;
+    --pad: 1rem;
+    --navbg: grey;
+  }
+  .darkTheme {
+    --background: black;
+    --text: white;
+    --navbg: grey;
+  }
 }

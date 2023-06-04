@@ -1,12 +1,11 @@
 import Head from "next/head";
-import { Inter } from "next/font/google";
 import Navbar from "@/components/navbar";
 import styled from "styled-components";
-
-const inter = Inter({ subsets: ["latin"] });
+import Products from "@/components/products";
 
 const Content = styled.div`
   background: var(--background);
+  color: var(--text);
 `;
 export default function Home() {
   return (
@@ -17,9 +16,11 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="min-h-screen">
+      <main>
         <Content className="flex flex-col w-full">
           <Navbar />
+          <Products />
+          <Products />
         </Content>
       </main>
     </>

@@ -1,19 +1,49 @@
 import Link from "next/link";
 import React, { useState } from "react";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
+import LightModeIcon from "@mui/icons-material/LightMode";
+import styled from "styled-components";
 
 const Navbar = () => {
+  const NavContainer = styled.div`
+    background-color: var(--navbg);
+  `;
+  const [dark, setDark] = useState(false);
+  const switchTheme = () => {
+    const currentTheme = document.body.classList;
+
+    document.body.classList.toggle("darkTheme");
+    setDark(!dark);
+  };
   return (
-    <div className="w-full">
-      <div className="flex  max-w-7xl mx-auto w-full justify-between">
-        <h2>Buy IT</h2>
-        <nav className="flex w-full justify-evenly">
+    <NavContainer className="w-full">
+      <div
+        className="flex p-5  max-w-7xl mx-auto w-full justify-around
+      "
+      >
+        <h2 className="w-fit flex items-center">Buy IT</h2>
+        <nav className="flex gap-8 justify-around items-center">
           <Link href="/">Home</Link>
           <Link href="/category">Category</Link>
           <Link href="/products">Products</Link>
-          <Link href="/cart">Cart</Link>
         </nav>
+        <div className="flex gap-8 items-center justify-center">
+          <button
+            onClick={() => {
+              switchTheme();
+            }}
+          >
+            {dark ? (
+              <LightModeIcon className="text-4xl rounded-full" />
+            ) : (
+              <DarkModeIcon className="text-4xl " />
+            )}
+          </button>
+          <Link href="/category">Account</Link>
+          <Link href="/products">Cart</Link>
+        </div>
       </div>
-    </div>
+    </NavContainer>
   );
 };
 
