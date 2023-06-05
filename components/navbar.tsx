@@ -21,7 +21,13 @@ const Navbar = () => {
         className="flex p-5  max-w-7xl mx-auto w-full justify-around
       "
       >
-        <h2 className="w-fit flex items-center">Buy IT</h2>
+        <h2 className="w-fit flex items-center text-xl font-semibold">
+          Buy IT
+        </h2>
+        <input
+          className="rounded-md pl-2 placeholder:text-sm"
+          placeholder="Search for product or brand"
+        />
         <nav className="flex gap-8 justify-around items-center">
           <Link href="/">Home</Link>
           <Link href="/category">Category</Link>

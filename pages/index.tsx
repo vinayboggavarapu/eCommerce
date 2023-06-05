@@ -1,13 +1,18 @@
 import Head from "next/head";
 import Navbar from "@/components/navbar";
 import styled from "styled-components";
-import Products from "@/components/products";
+import Featured from "@/components/featured";
+import LatestProducts from "@/components/latestproducts";
+import mongooseConnect from "@/lib/mongoose";
+import { GetServerSideProps } from "next";
+import { Product } from "@/models/product";
 
 const Content = styled.div`
   background: var(--background);
   color: var(--text);
 `;
-export default function Home() {
+export default function Home({ res }: any) {
+  console.log(res);
   return (
     <>
       <Head>
@@ -19,10 +24,21 @@ export default function Home() {
       <main>
         <Content className="flex flex-col w-full">
           <Navbar />
-          <Products />
-          <Products />
+          <hr />
+          <Featured />
+          <LatestProducts products={res} />
         </Content>
       </main>
     </>
   );
 }
+export const getServerSideProps: GetServerSideProps = async () => {
+  await mongooseConnect();
+  const res = await Product.find({}, null, { sort: { updatedAt: -1 } });
+
+  return {
+    props: {
+      res: JSON.parse(JSON.stringify(res)),
+    },
+  };
+};

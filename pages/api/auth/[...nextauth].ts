@@ -15,9 +15,8 @@ export const authOptions = {
   ],
   adapter: MongoDBAdapter(clientPromise),
   callbacks: {
-    session: ({ session, user }) => {
+    session: ({ session, user }: any) => {
       if (admin.includes(user.email)) {
-        console.log({ session });
         return session;
       } else {
         return false;
@@ -27,7 +26,7 @@ export const authOptions = {
 };
 export default NextAuth(authOptions);
 
-export const ValidOwner = async (req, res) => {
+export const ValidOwner = async (req: any, res: any) => {
   const session = await getServerSession(req, res, authOptions);
   if (!admin.includes(session?.user?.email)) {
     res.status(401);
