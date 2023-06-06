@@ -5,6 +5,41 @@ import React, { useContext, useEffect, useState } from "react";
 import { ProductData } from "@/fetch";
 import Image from "next/image";
 
+const payment = (e: any) => {
+  e.preventDefault();
+  const appendScript = new Promise((resolve, reject) => {
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    document.body.appendChild(script);
+    resolve(true);
+  });
+  appendScript.then(() => {
+    var options = {
+      key: process.env.NEXT_PUBLIC_RAZOR_ID, // Enter the Key ID generated from the Dashboard
+      amount: "50000", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+      currency: "INR",
+      name: "Buy IT", //your business name
+      description: "Test Transaction",
+      image: "https://example.com/your_logo",
+      callback_url: "http://localhost:3000/cart?success=1",
+      prefill: {
+        //We recommend using the prefill parameter to auto-fill customer's contact information especially their phone number
+        name: "Gaurav Kumar", //your customer's name
+        email: "gaurav.kumar@example.com",
+        contact: "9000090000", //Provide the customer's phone number for better conversion rates
+      },
+      notes: {
+        address: "Razorpay Corporate Office",
+      },
+      theme: {
+        color: "#202020",
+      },
+    };
+    var rzp1 = new (window as any).Razorpay(options);
+    rzp1.open();
+  });
+};
+
 const Cart = () => {
   const { cartItems } = useContext(StateContext);
   const [fetchCartItems, setfetchCartItems] = useState([]);
@@ -40,7 +75,10 @@ const Cart = () => {
               placeholder="Enter Address"
               className="border border-black w-56 rounded-md pl-2"
             />
-            <button className="w-56 bg-gray-200 p-2 rounded-md">
+            <button
+              className="w-56 bg-gray-200 p-2 rounded-md"
+              onClick={(e) => payment(e)}
+            >
               Proceed to Pay
             </button>
           </div>
