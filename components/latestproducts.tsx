@@ -5,6 +5,7 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import Link from "next/link";
 import { ProductData } from "@/fetch";
 import StateContext from "@/context/states";
+import Head from "next/head";
 
 export const Product = ({ product }: any) => {
   const { cartItems, setCartItems } = useContext(StateContext);

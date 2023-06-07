@@ -1,9 +1,12 @@
 import Navbar from "@/components/navbar";
 import StateContext from "@/context/states";
 import axios from "axios";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useLayoutEffect, useState } from "react";
 import { ProductData } from "@/fetch";
 import Image from "next/image";
+import Head from "next/head";
+import { useRouter } from "next/router";
+import ContinueShopping from "./continueShopping";
 
 const payment = (e: any) => {
   e.preventDefault();
@@ -35,7 +38,7 @@ const payment = (e: any) => {
         color: "#202020",
       },
     };
-    var rzp1 = new (window as any).Razorpay(options);
+    let rzp1 = new (window as any).Razorpay(options);
     rzp1.open();
   });
 };
@@ -43,9 +46,16 @@ const payment = (e: any) => {
 const Cart = () => {
   const { cartItems } = useContext(StateContext);
   const [fetchCartItems, setfetchCartItems] = useState([]);
-  console.log(cartItems);
+  const [address, setAddress] = useState("");
+  const [name, setName] = useState("");
+  const [contact, setContact] = useState("");
+  const [email, setEmail] = useState("");
 
-  useEffect(() => {
+  const [success, setSuccess] = useState(false);
+
+  console.log(cartItems);
+  const router = useRouter();
+  useLayoutEffect(() => {
     async function fetch() {
       await axios
         .post("/api/cart", cartItems)
@@ -53,48 +63,93 @@ const Cart = () => {
     }
     fetch();
     console.log(fetchCartItems);
-  }, []);
+    console.log(router);
+
+    if (router.asPath.includes("success=1")) {
+      setSuccess(true);
+    }
+  }, [router]);
+
   return (
     <div>
+      <Head>
+        <title>Checkout</title>
+      </Head>
       <Navbar />
-
-      {cartItems.length > 0 ? (
-        <div className="grid grid-cols-3 min-h-screen h-screen p-5 mx-auto">
-          <div className="col-span-2">
-            {fetchCartItems.map((product: ProductData) => {
-              return (
-                <div key={product._id}>
-                  <p>{product.title}</p>
-                </div>
-              );
-            })}
-          </div>
-          <div className="flex flex-col  border p-5 gap-5">
-            <h3 className="text-2xl font-semibold ">Add information</h3>
-            <input
-              placeholder="Enter Address"
-              className="border border-black w-56 rounded-md pl-2"
-            />
-            <button
-              className="w-56 bg-gray-200 p-2 rounded-md"
-              onClick={(e) => payment(e)}
-            >
-              Proceed to Pay
-            </button>
-          </div>
-        </div>
+      {success ? (
+        <ContinueShopping />
       ) : (
         <div>
-          <h3 className="text-2xl">No items in the cart</h3>
-          <p>Add items to cart</p>
-          <Image
-            src="/addCart.gif"
-            className="w-96"
-            alt="product"
-            width={300}
-            height={300}
-          />
-          <p>Continue Shopping</p>
+          {cartItems.length > 0 ? (
+            <div className="grid grid-cols-3 min-h-screen h-screen p-5 mx-auto">
+              <div className="col-span-2">
+                {fetchCartItems.map((product: ProductData) => {
+                  return (
+                    <div key={product._id}>
+                      <p>{product.title}</p>
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="flex flex-col justify-center h-2/4 border p-5 gap-5">
+                <h3 className="text-3xl text-center font-semibold ">
+                  Add information
+                </h3>
+
+                <input
+                  placeholder="Name"
+                  value={name}
+                  onChange={(e) => {
+                    setName(e.target.value);
+                  }}
+                  className="border border-black h-10 rounded-md pl-2"
+                />
+                <input
+                  placeholder="Email"
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                  }}
+                  className="border border-black h-10  rounded-md pl-2"
+                />
+                <input
+                  placeholder="Contact"
+                  value={contact}
+                  onChange={(e) => {
+                    setContact(e.target.value);
+                  }}
+                  className="border border-black h-10 rounded-md pl-2"
+                />
+                <input
+                  placeholder="Enter Address"
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                  }}
+                  className="border border-black h-10  rounded-md pl-2"
+                />
+                <button
+                  className=" bg-gray-200 p-2 rounded-md"
+                  onClick={(e) => payment(e)}
+                >
+                  Proceed to Pay
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div>
+              <h3 className="text-2xl">No items in the cart</h3>
+              <p>Add items to cart</p>
+              <Image
+                src="/addCart.gif"
+                className="w-96"
+                alt="product"
+                width={300}
+                height={300}
+              />
+              <p>Continue Shopping</p>
+            </div>
+          )}
         </div>
       )}
     </div>
