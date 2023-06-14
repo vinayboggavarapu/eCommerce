@@ -11,16 +11,21 @@ export const Product = ({ product }: any) => {
   const { cartItems, setCartItems } = useContext(StateContext);
   const offer = Math.ceil(product.price / 2300);
   const oldPrice = product.price + Math.ceil(product.price * (offer / 100));
+
   return (
     <div key={product._id} className="p-2  flex flex-col items-center">
       <p>{product.title}</p>
-      <Image
-        src="/mac.png"
-        className="w-96"
-        alt="product"
-        width={300}
-        height={300}
-      />
+
+      {product.images?.length > 0 && (
+        <Image
+          src={product.images[0]}
+          className="w-96"
+          alt="product"
+          width={300}
+          height={300}
+        />
+      )}
+
       <div className="flex items-center gap-3">
         <p className="text-xl font-semibold">₹ {product.price}</p>
         <p className=" text-base text-gray-600  line-through">₹ {oldPrice}</p>
